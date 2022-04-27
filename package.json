@@ -1,0 +1,21 @@
+{
+  "name": "rndownloader",
+  "version": "1.0.0",
+  "description": "A download tool for Discord's React Native alpha.",
+  "main": "src/index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Beefers/RNDownloader.git"
+  },
+  "author": "Beef",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/Beefers/RNDownloader/issues"
+  },
+  "homepage": "https://github.com/Beefers/RNDownloader#readme",
+  "dependencies": {
+    "node-fetch": "^3.2.3",
+    "yargs": "^17.4.1"
+  }
+}
