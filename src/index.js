@@ -1,24 +1,17 @@
 import fetch from "node-fetch";
 import { createWriteStream, existsSync, mkdirSync } from "fs";
+import { join } from "path";
 
-import { fileURLToPath } from "url";
-import { join, dirname } from "path";
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import constants from "./lib/constants.js";
+import clearFilesDirectory from "./lib/clearFilesDirectory.js";
+import parseArgs from "./lib/parseArgs.js";
 
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
+if (!existsSync(constants.downloadDir)) { mkdirSync(constants.downloadDir) };
+clearFilesDirectory();
 
-const argv = yargs(hideBin(process.argv)).option("ver").array("locales").array("arches").array("dpis").check((argv, options) => {
-    if (!argv.locales || !argv.arches || !argv.dpis || argv.locales.length === 0 || argv.arches.length === 0 || argv.dpis.length === 0) {
-        return "You must specify at least one locale, one arch and one dpi";
-    }
-    return true;
-}).argv;
+const argv = parseArgs(process.argv);
 
 const files = ["base", ...argv.locales, ...argv.arches, ...argv.dpis];
-const downloadDir = join(__dirname, "../", "downloads/");
-
-if (!existsSync(downloadDir)) { mkdirSync(downloadDir) };
 
 console.log(`Discord version ${argv.ver}, attempting to get: ${files.join(", ")}`);
 let downloadCount = 0;
@@ -27,12 +20,12 @@ const baseUrl = new URL("https://aliucord.com/download/discord");
 
 for(const file of files) {
     const fileUrl = new URL(`?v=${argv.ver}`.concat(file === "base" ? "" : `&split=config.${file}`), baseUrl);
+    console.log(fileUrl);
 
     (async() => {
         try {
             const res = await fetch(fileUrl);
-            const fileStream = createWriteStream(join(downloadDir, file === "base" ? "base.apk" : `config.${file}.apk`));
-
+            const fileStream = createWriteStream(join(constants.downloadDir, file === "base" ? "base.apk" : `config.${file}.apk`));
             
             res.body.pipe(fileStream);
             res.body.on("error", (err) => { throw err });
