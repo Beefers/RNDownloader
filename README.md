@@ -26,3 +26,4 @@ This should make a directory named `downloads`, your APKs will be in there.
 
 * Proper 404 and other error handling - currently downloads HTML
 * Comment code
+* Automatic installation (?)
